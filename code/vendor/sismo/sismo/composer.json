@@ -1,0 +1,37 @@
+{
+    "name": "sismo/sismo",
+    "type": "silex-application",
+    "description": "Sismo is a personal continuous integration server.",
+    "keywords": ["sismo", "continuous integration"],
+    "homepage": "http://sismo.sensiolabs.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabpot@symfony.com"
+        },
+        {
+            "name": "Sismo Community",
+            "homepage": "https://github.com/fabpot/sismo/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "silex/silex": "~1.0@dev",
+        "symfony/console": "~2.2",
+        "symfony/twig-bridge": "~2.2",
+        "symfony/process": "~2.2",
+        "symfony/filesystem": "~2.2",
+        "symfony/finder": "~2.2",
+        "sensiolabs/ansi-to-html": "~1.0"
+    },
+    "require-dev": {
+        "symfony/browser-kit": "~2.2",
+        "symfony/css-selector": "~2.2",
+        "symfony/class-loader": "~2.2"
+    },
+    "autoload": {
+        "psr-0": { "Sismo": "src/" }
+    },
+    "bin": ["sismo"]
+}
