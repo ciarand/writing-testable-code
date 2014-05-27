@@ -13,7 +13,7 @@ This presentation will be focused on these 3 topics:
 
 * Workflows, including testing tools like PHPUnit and Behat / Mink
 
-* Writing quality tests and “gotchas” to avoid along the way
+* Writing quality tests and "gotchas" to avoid along the way
 
 * Writing verifiable code that can be easily tested
 
