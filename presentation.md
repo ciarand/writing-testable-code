@@ -355,14 +355,101 @@ Benefits
 - You know the moment something breaks, hopefully before a customer sees it
 
 ---
-name: howdowegetthere
+name: testingstrats
+class: center, middle
+
+Testing strategies
+==================
+The quick tip version
+---------------------
+
+---
+class: center, middle
+
+Things that **do things**
+-------------------------
+...Should not **create** those things
+-------------------------------------
+
+---
+class: center, middle
+
+Things should make do with the resources provided
+-------------------------------------------------
+
+---
+class: center, middle
+
+Global state is bad
+-------------------
+
+---
+class: center, middle
+
+"Static" classes are global state
+---------------------------------
+
+---
+class: center, middle
+
+Methods longer than 10 lines are probably wrong
+-----------------------------------------------
+
+---
+class: center, middle
+
+Classes with more than 10 methods are probably doing too much
+-------------------------------------------------------------
+
+---
+class: center, middle
+
+Don't try and be clever
+-----------------------
+
+---
+class: center, middle
+
+**__get**, **__set,** and other magic methods are you trying to be clever
+-------------------------------------------------------------------------
+
+---
+class: center, middle
+
+You're probably putting too much functionality into one class
+-------------------------------------------------------------
+
+---
+class: center, middle
+
+Testable code is code that's provably correct
+---------------------------------------------
+
+---
+class: center, middle
+
+If your tests are > 10 lines of code each...
+--------------------------------------------
+...try again
+------------
+
+---
+class: center, middle
+
+The more typehinting you do...
+------------------------------
+...the smaller the chance your code is wrong
+--------------------------------------------
+
+---
+name: dangeroustogoalone
 
 It's dangerous to go alone
 ==========================
 
 ---
-template: howdowegetthere
-name: howdowegetthere
+template: dangeroustogoalone
+name: dangeroustogoalone
 
 ![](../img/morpheous_take_this.gif)
 
@@ -518,6 +605,89 @@ class CalculatorTest extends PHPUnit_Framework_TestCase
 }
 ```
 ---
+
+```php
+PHPUnit 4.1.1 by Sebastian Bergmann.
+
+Configuration read from /home/ciarand/presentations/writing-testable-code/code/phpunit.xml
+
+...
+
+Time: 41 ms, Memory: 3.75Mb
+
+OK (3 tests, 3 assertions)
+```
+
+---
+class: middle, center
+
+How do we test units without touching the database?
+---------------------------------------------------
+
+---
+Mocking!
+--------
+
+Our code under test:
+```php
+class Temperature
+{
+
+    public function __construct($service)
+    {
+        $this->_service = $service;
+    }
+
+    public function average()
+    {
+        $total = 0;
+        for ($i = 0; $i < 3; $i++) {
+            $total += $this->_service->readTemp();
+        }
+        return $total / 3;
+    }
+
+}
+```
+
+---
+We need to test it responds to different inputs. Let's use Mockery.
+
+```php
+use \Mockery as m;
+
+class TemperatureTest extends PHPUnit_Framework_TestCase
+{
+
+    protected function tearDown()
+    {
+        m::close();
+    }
+
+    public function testGetsAverageTemperatureFromThreeServiceReadings()
+    {
+        $service = m::mock('service');
+        $service->shouldReceive('readTemp')->times(3)->andReturn(10, 12, 14);
+
+        $temperature = new Temperature($service);
+
+        $this->assertEquals(12, $temperature->average());
+    }
+
+}
+```
+
+---
+Benefits
+--------
+
+- Mocking lets us test units in isolation
+
+- Mocking lets us avoid time intensive tasks like DB and filesystem access
+
+- Mocking means you can pinpoint exactly where your code is broken
+
+---
 name: aboutphpunit
 
 PHPUnit is a detail-oriented testing framework
@@ -569,7 +739,7 @@ template: behatintro
 name: behatintro
 template: behatintro
 
-```cucumber
+```gherkin
 Feature: Your first feature
   In order to start using Behat
   As a manager or developer
@@ -629,10 +799,63 @@ $code = $session->getStatusCode();
 
 ---
 
+An example Behat and Mink test, taken from their homepage:
+
+```gherkin
+# features/search.feature
+Feature: Search
+    In order to see a word definition
+    As a website user
+    I need to be able to search for a word
+
+    Scenario: Searching for a page that does exist
+        Given I am on "/wiki/Main_Page"
+        When I fill in "search" with "Behavior Driven Development"
+        And I press "searchButton"
+        Then I should see "agile software development"
+
+    Scenario: Searching for a page that does NOT exist
+        Given I am on "/wiki/Main_Page"
+        When I fill in "search" with "Glory Driven Development"
+        And I press "searchButton"
+        Then I should see "Search results"
+```
+
+---
+
+How do we define the testing behaviors?
+---------------------------------------
+
+```gherkin
+Given I am on "/wiki/Main_Page"
+```
+
+```php
+/**
+ * Opens specified page.
+ *
+ * @Given /^(?:|I )am on "(?P<page>[^"]+)"$/
+ * @When /^(?:|I )go to "(?P<page>[^"]+)"$/
+ */
+public function visit($page)
+{
+    $this->getSession()->visit($this->locatePath($page));
+}
+```
+
+---
+class: center, middle
+
 Tools
 =====
 
 ![](../img/devops_tools.gif)
+
+---
+class: center, middle
+
+Continuous integration
+======================
 
 ---
 name: idetools
@@ -736,4 +959,220 @@ template: windows
 ---
 template: windows
 
-![](../img/heres_a_nickel.gif)
+Maybe try Grunt or something?
+-----------------------------
+
+---
+
+class: center, middle
+
+Continuous integration services
+===============================
+
+---
+name: hostedandfree
+
+Hosted and free
+---------------
+- Travis.ci
+    - Free for open source projects (GitHub)
+    - Very popular
+    - Supports PHP 5.3 through 5.6 + HHVM
+
+---
+template: hostedandfree
+name: hostedandfree
+
+- Drone.io
+    - Free for open source projects
+    - Less popular, has robots on the front page
+    - Supports PHP 5.4
+
+---
+template: hostedandfree
+name: hostedandfree
+
+- Shippable.com
+    - Up to 5 free private repos
+    - Runs on Docker
+    - Supports PHP 5.3 - 5.5
+
+---
+
+Self-hosted (enterprisey)
+-------------------------
+- Jenkins
+    - Very popular among enterprises
+    - Rock solid core (runs on Java)
+    - Huge amounts of configuration options
+
+- Gitlab-ci
+    - Less popular
+    - Comes with version control (Gitlab) built in
+    - Runs on Ruby
+
+---
+
+Self-hosted (indie)
+-------------------
+- Sismo
+    - Written by the Symfony guy (Fabien)
+    - Easy to setup (one php file)
+
+- cijoe
+    - Written in Ruby
+    - Meant for localhost
+
+- Build bot
+    - Python?
+    - Cool name, which is why it's included here
+
+---
+
+General debugging tools
+=======================
+Not necessarily test-related
+----------------------------
+
+---
+
+Psysh.org
+---------
+"A runtime developer console, interactive debugger and REPL"
+
+```php
+<?php
+
+/**
+ * A really useful dockblock
+ * @param int $arg1
+ * @param int $arg2
+ * @param int $arg3
+ * @param FluxCapacitor $etc
+ *
+ * @return mixed
+ */
+function whats_going_on_here($arg1, $arg2, $arg3, $etc)
+{
+    $res = ord($arg1) | $arg2;
+
+    // What?!
+
+    \Psy\Shell::debug(get_defined_vars());
+
+    return $arg3 * $etc . $res;
+}
+```
+
+---
+layout: true
+
+Drops you into a REPL
+---------------------
+
+Looks like this:
+
+---
+
+```shell
+λ php my_problem_file.php
+
+Psy Shell v0.1.8 (PHP 5.5.12 — cli) by Justin Hileman
+>>>
+
+```
+
+---
+
+```shell
+λ php my_problem_file.php
+
+Psy Shell v0.1.8 (PHP 5.5.12 — cli) by Justin Hileman
+>>> ls
+```
+---
+
+```shell
+λ php my_problem_file.php
+
+Psy Shell v0.1.8 (PHP 5.5.12 — cli) by Justin Hileman
+>>> ls
+Variables: $arg1, $arg2, $arg3, $etc
+>>>
+```
+---
+
+```shell
+λ php my_problem_file.php
+
+Psy Shell v0.1.8 (PHP 5.5.12 — cli) by Justin Hileman
+>>> ls
+Variables: $arg1, $arg2, $arg3, $etc
+>>> doc whats_going_on_here
+```
+
+---
+
+```shell
+λ php my_problem_file.php
+
+Psy Shell v0.1.8 (PHP 5.5.12 — cli) by Justin Hileman
+>>> ls
+Variables: $arg1, $arg2, $arg3, $etc
+>>> doc whats_going_on_here
+function whats_going_on_here($arg1, $arg2, $arg3, $etc)
+
+Description:
+  A really useful dockblock
+
+Param:
+  int            $arg1
+  int            $arg2
+  int            $arg3
+  FluxCapacitor  $etc
+
+Return:
+  mixed
+```
+
+---
+layout: false
+
+Learning resources
+==================
+
+- [Laracasts](https://laracasts.com)
+
+- [PHP the right way](http://www.phptherightway.com/)
+
+- [igor.io](http://igor.io)
+
+- [Laravel Testing Decoded](https://leanpub.com/laravel-testing-decoded)
+
+
+---
+
+Testing resources
+=================
+
+- [Mockery](https://github.com/padraic/mockery)
+
+- [PHPUnit](http://phpunit.de/)
+
+- [Behat](http://behat.org/)
+
+- [Mink](http://mink.behat.org/)
+
+---
+
+Things to checkout
+==================
+
+- [Phpspec](http://www.phpspec.net/)
+
+- [Prophecy](https://github.com/phpspec/prophecy)
+
+---
+
+Thank you!
+==========

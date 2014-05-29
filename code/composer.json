@@ -3,6 +3,7 @@
         "classmap": ["src"]
     },
     "require-dev": {
+        "psy/psysh": "*",
         "phpunit/phpunit": "~4.1"
     },
     "require": {

@@ -18,7 +18,7 @@ class CalculatorTest extends PHPUnit_Framework_TestCase
         return array(
             "2 and 2" => array(2, 2, 4),
             "3 and 1" => array(3, 1, 4),
-            "6 and 2" => array(6, 2, 7),
+            "6 and 2" => array(6, 2, 8),
         );
     }
 }
