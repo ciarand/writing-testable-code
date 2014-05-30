@@ -305,7 +305,7 @@ Breaking the build
 That's when your project uses continuous integration but someone's latest
 change made the tests fail.
 
-![keep calm and don't break the build](../img/you-broke-the-build.png)
+![keep calm and don't break the build](/img/you-broke-the-build.png)
 
 ---
 
@@ -326,14 +326,14 @@ after any code change that doesn't break the build.
 
 - It also means you've got the deployment process automated
 
-![witchcraft](../img/witchcraft.gif)
+![witchcraft](/img/witchcraft.gif)
 ---
 
 Case study: Github
 ------------------
 >"Aug. 23, saw 563 builds and 175 deploys"
 
-![](../img/github_deploys.png)
+![](/img/github_deploys.png)
 
 ---
 
@@ -342,7 +342,7 @@ Case study: Etsy
 >"At Etsy about 150 engineers deploy a single monolithic application more than
 >60 times a day"
 
-![](../img/etsy_deployment.png)
+![](/img/etsy_deployment.png)
 
 ---
 
@@ -451,7 +451,7 @@ It's dangerous to go alone
 template: dangeroustogoalone
 name: dangeroustogoalone
 
-![](../img/morpheous_take_this.gif)
+![](/img/morpheous_take_this.gif)
 
 ---
 
@@ -849,7 +849,7 @@ class: center, middle
 Tools
 =====
 
-![](../img/devops_tools.gif)
+![](/img/devops_tools.gif)
 
 ---
 class: center, middle
@@ -954,7 +954,7 @@ template: windows
 ---
 template: windows
 
-![](../img/idk.gif)
+![](/img/idk.gif)
 
 ---
 template: windows
