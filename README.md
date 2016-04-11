@@ -1,3 +1,5 @@
+This project is deprecated and unmaintained. Proceed with caution!
+
 Writing Testable Code
 ---------------------
 >A presentation on writing testable code in PHP
